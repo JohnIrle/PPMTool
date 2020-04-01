@@ -4,6 +4,7 @@ package com.johnirle.ppmtool.web;
 // 31 March 2020
 
 import com.johnirle.ppmtool.domain.Project;
+import com.johnirle.ppmtool.services.MapValidationErrorService;
 import com.johnirle.ppmtool.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,21 +27,14 @@ public class ProjectController {
   @Autowired
   private ProjectService projectService;
 
+  @Autowired
+  private MapValidationErrorService mapValidationErrorService;
+
   @PostMapping("")
   public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
 
-    if (result.hasErrors()) {
-
-      Map<String, String> errorMap = new HashMap<>();
-
-      for(FieldError error: result.getFieldErrors()) {
-        errorMap.put(error.getField(), error.getDefaultMessage());
-      }
-
-      return new ResponseEntity<>(errorMap,HttpStatus.BAD_REQUEST);
-    }
-
-
+    ResponseEntity<?> errorMap = MapValidationErrorService.MapValidationService(result);
+    if(errorMap != null) return errorMap;
 
     projectService.saveOrUpdateProject(project);
     return new ResponseEntity<>(project, HttpStatus.CREATED);

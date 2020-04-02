@@ -22,10 +22,19 @@ class AddProject extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors })
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.errors) {
+  //     this.setState({ errors: nextProps.errors })
+  //   }
+  // }
+
+  componentDidUpdate(prevProp, prevState) {
+    if (prevState.errors === this.state.errors) {
+      return null;
     }
+
+    this.setState({ errors: this.props.errors })
+
   }
 
   onChange(e) {

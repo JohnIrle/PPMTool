@@ -4,6 +4,7 @@ package com.johnirle.ppmtool.domain;
 // 31 March 2020
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import javax.persistence.*;
@@ -43,7 +44,7 @@ public class Project {
   private Date updated_At;
 
   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
-
+  @JsonIgnore
   private Backlog backlog;
 
   public Project() {

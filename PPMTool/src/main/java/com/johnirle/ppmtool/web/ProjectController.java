@@ -16,9 +16,9 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/project")
-@CrossOrigin(origins = "http://localhost:3000")
 public class ProjectController {
 
   @Autowired

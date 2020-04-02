@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { createProject } from "../../actions/projectActions"
 
 class AddProject extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       projectName: "",
@@ -13,10 +14,17 @@ class AddProject extends Component {
       description: "",
       start_date: "",
       end_date: "",
+      errors: {}
     }
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors })
+    }
   }
 
   onChange(e) {
@@ -37,6 +45,7 @@ class AddProject extends Component {
   }
 
   render() {
+    const { errors } = this.state
     return (
       <div className="register">
         <div className="container">
@@ -45,6 +54,7 @@ class AddProject extends Component {
               <h5 className="display-4 text-center">Create Project form</h5>
               <hr />
               <form onSubmit={this.onSubmit}>
+                <p>{errors.projectName}</p>
                 <div className="form-group">
                   <input
                     type="text"
@@ -55,6 +65,7 @@ class AddProject extends Component {
                     onChange={this.onChange}
                   />
                 </div>
+                <p>{errors.projectIdentifier}</p>
                 <div className="form-group">
                   <input
                     type="text"
@@ -108,7 +119,15 @@ class AddProject extends Component {
 }
 
 AddProject.propTypes = {
-  createProject: PropTypes.func.isRequired
+  createProject: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
 }
 
-export default connect(null, { createProject })(AddProject)
+const mapStateToProps = state => ({
+  errors: state.errors
+})
+
+export default connect(
+  mapStateToProps,
+  { createProject }
+)(withRouter(AddProject))

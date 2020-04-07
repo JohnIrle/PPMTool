@@ -6,4 +6,5 @@ export const addProjectTask = (backlog_id, project_task, history) => async dispa
     .then(res => {
       history.push(`/projectBoard/${backlog_id}`);
     })
+    .catch(err => console.log(err))
 }

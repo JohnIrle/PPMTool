@@ -38,7 +38,8 @@ class AddProjectTask extends Component {
       priority: this.state.priority,
       dueDate: this.state.dueDate,
     }
-    this.props.addProjectTask(this.state.id, newTask, this.props.history)
+
+    this.props.addProjectTask(this.state.projectIdentifier, newTask, this.props.history)
   }
 
   render() {
@@ -53,7 +54,7 @@ class AddProjectTask extends Component {
               </Link>
               <h4 className="display-4 text-center">Add /Update Project Task</h4>
               <p className="lead text-center">Project Name + Project Code</p>
-              <form>
+              <form onSubmit={this.onSubmit}>
                 <div className="form-group">
                   <input
                     type="text"
@@ -120,8 +121,8 @@ AddProjectTask.propTypes = {
   addProjectTask: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = {
+const mapStateToProps = state => ({
+  errors: state.errors
+});
 
-};
-
-export default connect(null, { addProjectTask })(AddProjectTask)
+export default connect(mapStateToProps, { addProjectTask })(AddProjectTask)

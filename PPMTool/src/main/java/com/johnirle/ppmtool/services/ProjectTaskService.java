@@ -40,7 +40,7 @@ public class ProjectTaskService {
       projectTask.setProjectIdentifier(projectIdentifier);
 
       // Initial priority when priority null
-      if (projectTask.getPriority() == null) {
+      if (projectTask.getPriority() == 0 || projectTask.getPriority() == null) {
         projectTask.setPriority(3);
       }
       // Initial status when status is null
@@ -61,6 +61,7 @@ public class ProjectTaskService {
     if (((List<ProjectTask>) tasks).isEmpty()){
       throw new ProjectNotFoundException("Project with ID: '" + id + "' does not exist");
     }
+
     return tasks;
   }
 

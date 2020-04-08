@@ -12,6 +12,27 @@ const ProjectBoard = ({ match, getBacklog, backlog, errors }) => {
     getBacklog(id);
   }, [])
 
+  let BoardContent;
+
+  const boardAlgorithm = (errors, backlog) => {
+    if (backlog.project_tasks.length < 1) {
+      if (errors.projectNotFound) {
+        return (
+          <div className="alert alert-danger text-center" role="alert">
+            {errors.projectNotFound}
+          </div>
+        )
+      } else {
+        return (
+          <div className="alert alert-info text-center" role="alert">No Project Tasks on this board</div>
+        )
+      }
+    } else {
+      return <Backlog project_tasks={backlog.project_tasks} />
+    }
+  }
+
+  BoardContent = boardAlgorithm(errors, backlog)
 
   return (
     <div className="container">
@@ -20,18 +41,20 @@ const ProjectBoard = ({ match, getBacklog, backlog, errors }) => {
       </Link>
       <br />
       <hr />
-      <Backlog project_tasks={backlog.project_tasks} />
+      {BoardContent}
     </div>
   )
 }
 
 ProjectBoard.propTypes = {
   backlog: PropTypes.object.isRequired,
-  getBacklog: PropTypes.func.isRequired
+  getBacklog: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
-  backlog: state.backlog
+  backlog: state.backlog,
+  errors: state.errors
 })
 
 export default connect(mapStateToProps, { getBacklog })(ProjectBoard)

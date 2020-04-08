@@ -24,6 +24,9 @@ public class ProjectTaskService {
   @Autowired
   private ProjectTaskRepository projectTaskRepository;
 
+  @Autowired
+  private ProjectRepository projectRepository;
+
 
   public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
     try {
@@ -56,13 +59,13 @@ public class ProjectTaskService {
 
   public Iterable<ProjectTask> findBacklogById(String id) {
 
-    Iterable<ProjectTask> tasks = projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
+    Project project = projectRepository.findByProjectIdentifier(id);
 
-    if (((List<ProjectTask>) tasks).isEmpty()){
+    if (project == null){
       throw new ProjectNotFoundException("Project with ID: '" + id + "' does not exist");
     }
 
-    return tasks;
+    return projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
   }
 
   public ProjectTask findPTByProjectSequence(String backlog_id, String pt_id) {
@@ -81,7 +84,7 @@ public class ProjectTaskService {
     }
 
     // make sure that the backlog/project id in the path corresponds to the correct project
-    if(!projectTask.getBacklog().getProjectIdentifier().equals(backlog_id)){
+    if(!projectTask.getProjectIdentifier().equals(backlog_id)){
       throw new ProjectNotFoundException("Project Task '" + pt_id + "' does not exist in project: '" + backlog_id);
     }
 

@@ -40,6 +40,38 @@ public class User implements UserDetails {
 
   //OneToMany with Project
 
+
+  /* UserDetails interface methods */
+  @Override
+  @JsonIgnore
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return null;
+  }
+
+  @Override
+  @JsonIgnore
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  @JsonIgnore
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  @JsonIgnore
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  @JsonIgnore
+  public boolean isEnabled() {
+    return true;
+  }
+
   public User() {
   }
 
@@ -99,37 +131,5 @@ public class User implements UserDetails {
     this.updated_At = updated_At;
   }
 
-  /*
-  UserDetails interface methods
-   */
 
-  @Override
-  @JsonIgnore
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return null;
-  }
-
-  @Override
-  @JsonIgnore
-  public boolean isAccountNonExpired() {
-    return true;
-  }
-
-  @Override
-  @JsonIgnore
-  public boolean isAccountNonLocked() {
-    return true;
-  }
-
-  @Override
-  @JsonIgnore
-  public boolean isCredentialsNonExpired() {
-    return true;
-  }
-
-  @Override
-  @JsonIgnore
-  public boolean isEnabled() {
-    return true;
-  }
 }

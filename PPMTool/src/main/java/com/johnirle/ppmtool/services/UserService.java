@@ -4,6 +4,7 @@ package com.johnirle.ppmtool.services;
 // 07 April 2020
 
 import com.johnirle.ppmtool.domain.User;
+import com.johnirle.ppmtool.exceptions.UsernameAlreadyExistsException;
 import com.johnirle.ppmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,18 +16,26 @@ public class UserService {
   @Autowired
   private UserRepository userRepository;
 
+
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  public User saveUser (User newUser) {
-    newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+  public User saveUser (User newUser){
 
-    // Username has to be unique(exception)
+    try{
+      newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+      //Username has to be unique (exception)
+      newUser.setUsername(newUser.getUsername());
+      // Make sure that password and confirmPassword match
+      // We don't persist or show the confirmPassword
+      return userRepository.save(newUser);
 
-    // Make sure that password and confirmPassword match
-    // We don't persist or show the confirmPassword
-    return userRepository.save(newUser);
+    }catch (Exception e){
+      throw new UsernameAlreadyExistsException("Username '"+newUser.getUsername()+"' already exists");
+    }
+
   }
 
-  
+
+
 }

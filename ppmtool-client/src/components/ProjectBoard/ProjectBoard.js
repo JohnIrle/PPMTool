@@ -10,7 +10,8 @@ const ProjectBoard = ({ match, getBacklog, backlog, errors }) => {
 
   useEffect(() => {
     getBacklog(id);
-  }, [getBacklog, id])
+  }, [])
+
 
   return (
     <div className="container">
@@ -19,7 +20,7 @@ const ProjectBoard = ({ match, getBacklog, backlog, errors }) => {
       </Link>
       <br />
       <hr />
-      <Backlog />
+      <Backlog project_tasks={backlog.project_tasks} />
     </div>
   )
 }

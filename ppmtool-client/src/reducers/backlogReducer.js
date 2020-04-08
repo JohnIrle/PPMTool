@@ -2,7 +2,8 @@ import { GET_BACKLOG, GET_PROJECT_TASK, DELETE_PROJECT_TASK } from '../actions/t
 
 const initialState = {
   project_tasks: [],
-  project_task: {}
+  project_task: {},
+  loading: true
 }
 
 export default function (state = initialState, action) {
@@ -16,7 +17,8 @@ export default function (state = initialState, action) {
     case GET_PROJECT_TASK:
       return {
         ...state,
-        project_task: action.payload
+        project_task: action.payload,
+        loading: false
       }
 
     case DELETE_PROJECT_TASK:

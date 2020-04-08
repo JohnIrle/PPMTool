@@ -2,7 +2,8 @@ import { GET_PROJECTS, GET_PROJECT, DELETE_PROJECT } from '../actions/types'
 
 const initalState = {
   projects: [],
-  project: {}
+  project: {},
+  loading: true,
 }
 
 export default function (state = initalState, action) {
@@ -16,7 +17,8 @@ export default function (state = initalState, action) {
     case GET_PROJECT:
       return {
         ...state,
-        project: action.payload
+        project: action.payload,
+        loading: false
       }
 
     case DELETE_PROJECT:

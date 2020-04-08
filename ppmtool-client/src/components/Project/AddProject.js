@@ -28,15 +28,6 @@ class AddProject extends Component {
   //   }
   // }
 
-  componentDidUpdate(prevProp, prevState) {
-    if (prevState.errors === this.state.errors) {
-      return null;
-    }
-
-    this.setState({ errors: this.props.errors })
-
-  }
-
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value })
   }
@@ -54,7 +45,7 @@ class AddProject extends Component {
   }
 
   render() {
-    const { errors } = this.state
+    const { errors } = this.props
     return (
       <div className="register">
         <div className="container">

@@ -1,24 +1,22 @@
 import axios from "axios"
 import { GET_ERRORS, GET_PROJECTS, GET_PROJECT, DELETE_PROJECT } from "./types"
 
-export const createProject = (project, history) => async dispatch => {
-  await axios.post("/api/project", project)
-    .then(res => {
-      history.push("/dashboard")
-      dispatch({
-        type: GET_ERRORS,
-        payload: {}
-      })
+export const createProject = (formData, history) => async dispatch => {
+  try {
+    const res = await axios.post("/api/project", formData)
+
+    dispatch({
+      type: GET_PROJECT,
+      payload: res.data
     })
-    .catch(err => {
-      if (err) {
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-        })
-      }
-    }
-    )
+    history.push("/dashboard")
+
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+  }
 }
 
 export const getProjects = () => async dispatch => {

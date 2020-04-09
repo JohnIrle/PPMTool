@@ -27,14 +27,19 @@ public class ProjectTaskService {
   @Autowired
   private ProjectRepository projectRepository;
 
+  @Autowired
+  private ProjectService projectService;
 
-  public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
-    try {
-      Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
+
+  public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask, String username) {
+
+
+      Backlog backlog = projectService.findProjectByIdentifier(projectIdentifier, username).getBacklog();
 
       projectTask.setBacklog(backlog);
       // project sequence IDPRO-1, IDPRO-2 etc
       Integer BacklogSequence = backlog.getPTSequence();
+      // Update BL Sequence
       BacklogSequence++;
       backlog.setPTSequence(BacklogSequence);
 
@@ -43,7 +48,7 @@ public class ProjectTaskService {
       projectTask.setProjectIdentifier(projectIdentifier);
 
       // Initial priority when priority null
-      if (projectTask.getPriority() == 0 || projectTask.getPriority() == null) {
+      if (projectTask.getPriority() == null || projectTask.getPriority() == 0) {
         projectTask.setPriority(3);
       }
       // Initial status when status is null
@@ -52,21 +57,16 @@ public class ProjectTaskService {
       }
 
       return projectTaskRepository.save(projectTask);
-    } catch (Exception ex) {
-      throw new ProjectNotFoundException("Project not found");
-    }
   }
 
-  public Iterable<ProjectTask> findBacklogById(String id) {
 
-    Project project = projectRepository.findByProjectIdentifier(id);
+  public Iterable<ProjectTask> findBacklogById(String id, String username) {
 
-    if (project == null){
-      throw new ProjectNotFoundException("Project with ID: '" + id + "' does not exist");
-    }
+    projectService.findProjectByIdentifier(id, username);
 
     return projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
   }
+
 
   public ProjectTask findPTByProjectSequence(String backlog_id, String pt_id) {
     // make sure we are searching on an existing backlog

@@ -14,7 +14,6 @@ import com.johnirle.ppmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 
 @Service
 public class ProjectService {
@@ -30,9 +29,23 @@ public class ProjectService {
 
 
   public Project saveOrUpdateProject(Project project, String username) {
-    String projectIdentifier = project.getProjectIdentifier().toUpperCase();
+
+    // project.getId != null
+    // find by db id -> null
+
+    if(project.getId() != null) {
+      Project existingProject = projectRepository.findByProjectIdentifier(project.getProjectIdentifier());
+
+      if (existingProject != null && (!existingProject.getProjectLeader().equals(username))) {
+        throw new ProjectNotFoundException("Project not found in your account");
+      } else if (existingProject == null) {
+        throw new ProjectNotFoundException("Project with ID: '" + project.getProjectIdentifier()+"' cannot be updated because it doesn't exist");
+      }
+    }
+
 
     try {
+      String projectIdentifier = project.getProjectIdentifier().toUpperCase();
 
       User user = userRepository.findByUsername(username);
       project.setUser(user);
@@ -53,7 +66,7 @@ public class ProjectService {
 
       return projectRepository.save(project);
     } catch (Exception e) {
-      throw new ProjectIdException("Project ID '"+projectIdentifier+"' already exists");
+      throw new ProjectIdException("Project ID '"+ project.getProjectIdentifier().toUpperCase() +"' already exists");
     }
   }
 

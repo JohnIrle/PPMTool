@@ -7,11 +7,14 @@ import com.johnirle.ppmtool.domain.Backlog;
 import com.johnirle.ppmtool.domain.Project;
 import com.johnirle.ppmtool.domain.User;
 import com.johnirle.ppmtool.exceptions.ProjectIdException;
+import com.johnirle.ppmtool.exceptions.ProjectNotFoundException;
 import com.johnirle.ppmtool.repositories.BacklogRepository;
 import com.johnirle.ppmtool.repositories.ProjectRepository;
 import com.johnirle.ppmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.security.Principal;
 
 @Service
 public class ProjectService {
@@ -33,7 +36,9 @@ public class ProjectService {
 
       User user = userRepository.findByUsername(username);
       project.setUser(user);
+      project.setProjectLeader(user.getUsername());
       project.setProjectIdentifier(projectIdentifier);
+
 
       if(project.getId() == null) {
         Backlog backlog = new Backlog();
@@ -52,7 +57,7 @@ public class ProjectService {
     }
   }
 
-  public Project findProjectByIdentifier(String projectId) {
+  public Project findProjectByIdentifier(String projectId, String username) {
 
     Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
 
@@ -60,20 +65,20 @@ public class ProjectService {
       throw new ProjectIdException("Project Id '"+projectId.toUpperCase()+"' does not exist");
     }
 
+    if(!project.getProjectLeader().equals(username)) {
+      throw new ProjectNotFoundException("Project not found in your account");
+    }
+
     return project;
   }
 
-  public Iterable<Project> findAllProjects() {
-    return projectRepository.findAll();
+  public Iterable<Project> findAllProjects(String username) {
+    return projectRepository.findAllByProjectLeader(username);
   }
 
-  public void deleteProjectByIdentifier(String projectId) {
-    Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
+  public void deleteProjectByIdentifier(String projectId, String username) {
 
-    if(project == null) {
-      throw new ProjectIdException("Cannot Delete Project with ID '"+projectId.toUpperCase()+"'. This project does not exist");
-    }
 
-    projectRepository.delete(project);
+    projectRepository.delete(findProjectByIdentifier(projectId, username));
   }
 }

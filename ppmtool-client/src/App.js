@@ -12,6 +12,9 @@ import ProjectBoard from './components/ProjectBoard/ProjectBoard';
 import store from "./store";
 import AddProjectTask from './components/ProjectBoard/ProjectTasks/AddProjectTask';
 import UpdateProjectTask from './components/ProjectBoard/ProjectTasks/UpdateProjectTask'
+import Landing from './components/Layout/Landing'
+import Register from './components/UserManagement/Register';
+import Login from './components/UserManagement/Login'
 
 
 function App() {
@@ -20,6 +23,15 @@ function App() {
       <Router>
         <div className="App">
           <NavBar />
+          {
+            // Public routes
+          }
+          <Route exact path="/" component={Landing} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/login" component={Login} />
+          {
+            // Private routes
+          }
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/addProject" component={AddProject} />
           <Route exact path="/updateProject/:id" component={UpdateProject} />

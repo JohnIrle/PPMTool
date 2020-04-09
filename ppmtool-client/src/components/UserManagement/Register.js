@@ -1,38 +1,117 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import { createNewUser } from "../../actions/securityActions"
+import classnames from 'classnames'
+import PropTypes from 'prop-types'
 
-export default class Register extends Component {
-  render() {
-    return (
-      <div className="register">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-8 m-auto">
-              <h1 className="display-4 text-center">Sign Up</h1>
-              <p className="lead text-center">Create your Account</p>
-              <form action="create-profile.html">
-                <div className="form-group">
-                  <input type="text" className="form-control form-control-lg" placeholder="Name" name="name"
-                    required />
-                </div>
-                <div className="form-group">
-                  <input type="email" className="form-control form-control-lg" placeholder="Email Address" name="email" />
+const Register = ({ errors, history, createNewUser }) => {
 
-                </div>
-                <div className="form-group">
-                  <input type="password" className="form-control form-control-lg" placeholder="Password" name="password" />
-                </div>
-                <div className="form-group">
-                  <input type="password" className="form-control form-control-lg" placeholder="Confirm Password"
-                    name="password2" />
-                </div>
-                <input type="submit" className="btn btn-info btn-block mt-4" />
-              </form>
-            </div>
+  const [formData, setFormData] = useState({
+    fullName: "",
+    username: "",
+    password: "",
+    confirmPassword: ""
+  })
+
+  const {
+    fullName,
+    username,
+    password,
+    confirmPassword
+  } = formData;
+
+  const onChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault()
+    createNewUser(formData, history)
+  }
+
+  return (
+    <div className="register">
+      <div className="container">
+        <div className="row">
+          <div className="col-md-8 m-auto">
+            <h1 className="display-4 text-center">Sign Up</h1>
+            <p className="lead text-center">Create your Account</p>
+            <form onSubmit={e => onSubmit(e)}>
+              <div className="form-group">
+                <input type="text"
+                  className={classnames("form-control form-control-lg", {
+                    "is-invalid": errors.fullName
+                  })}
+                  placeholder="Full Name"
+                  name="fullName"
+                  value={fullName}
+                  onChange={e => onChange(e)}
+                />
+                {errors.fullName && (
+                  <div className="invalid-feedback">{errors.fullName}</div>
+                )}
+              </div>
+              <div className="form-group">
+                <input
+                  type="text"
+                  className={classnames("form-control form-control-lg", {
+                    "is-invalid": errors.username
+                  })}
+                  placeholder="Username"
+                  name="username"
+                  value={username}
+                  onChange={e => onChange(e)}
+                />
+                {errors.username && (
+                  <div className="invalid-feedback">{errors.username}</div>
+                )}
+              </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  className={classnames("form-control form-control-lg", {
+                    "is-invalid": errors.password
+                  })}
+                  placeholder="Password"
+                  name="password"
+                  value={password}
+                  onChange={e => onChange(e)}
+                />
+                {errors.password && (
+                  <div className="invalid-feedback">{errors.password}</div>
+                )}
+              </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  className={classnames("form-control form-control-lg", {
+                    "is-invalid": errors.confirmPassword
+                  })}
+                  placeholder="Confirm Password"
+                  name="confirmPassword"
+                  value={confirmPassword}
+                  onChange={e => onChange(e)}
+                />
+                {errors.confirmPassword && (
+                  <div className="invalid-feedback">{errors.confirmPassword}</div>
+                )}
+              </div>
+
+              <input type="submit" className="btn btn-info btn-block mt-4" />
+            </form>
           </div>
         </div>
       </div>
-
-
-    )
-  }
+    </div>
+  )
 }
+
+Register.propTypes = ({
+  errors: PropTypes.object.isRequired,
+})
+
+const mapStateToProps = state => ({
+  errors: state.errors
+});
+
+export default connect(mapStateToProps, { createNewUser })(Register);

@@ -127,6 +127,14 @@ public class Project {
     this.backlog = backlog;
   }
 
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
   @PrePersist
   protected void onCreate() {
     this.created_At = new  Date();

@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { login } from '../../actions/securityActions'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-const Login = ({ errors, history, login }) => {
+const Login = ({ errors, history, login, security }) => {
 
   const [formData, setFormData] = useState({
     username: "",
@@ -15,6 +15,12 @@ const Login = ({ errors, history, login }) => {
     username,
     password
   } = formData
+
+  useEffect(() => {
+    if (security.validToken) {
+      history.push("/dashboard")
+    }
+  })
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -77,7 +83,8 @@ Login.propTypes = ({
 })
 
 const mapStateToProps = state => ({
-  errors: state.errors
+  errors: state.errors,
+  security: state.security
 })
 
 export default connect(mapStateToProps, { login })(Login)

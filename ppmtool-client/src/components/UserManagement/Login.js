@@ -78,13 +78,14 @@ const Login = ({ errors, history, login, security }) => {
 }
 
 Login.propTypes = ({
+  security: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   login: PropTypes.func.isRequired
 })
 
 const mapStateToProps = state => ({
   errors: state.errors,
-  security: state.security
+  security: state.security,
 })
 
 export default connect(mapStateToProps, { login })(Login)

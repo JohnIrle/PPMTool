@@ -4,7 +4,11 @@ import { createNewUser } from "../../actions/securityActions"
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-const Register = ({ errors, history, createNewUser }) => {
+const Register = ({ errors, history, createNewUser, security }) => {
+  // Don't display if logged in
+  if (security.validToken) {
+    history.push("/dashboard")
+  }
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -108,10 +112,13 @@ const Register = ({ errors, history, createNewUser }) => {
 
 Register.propTypes = ({
   errors: PropTypes.object.isRequired,
+  security: PropTypes.object.isRequired,
+  createNewUser: PropTypes.func.isRequired
 })
 
 const mapStateToProps = state => ({
-  errors: state.errors
+  errors: state.errors,
+  security: state.security
 });
 
 export default connect(mapStateToProps, { createNewUser })(Register);

@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { login } from '../../actions/securityActions'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
 const Login = ({ errors, history, login, security }) => {
+
+  // Don't display if logged in
+  if (security.validToken) {
+    history.push("/dashboard")
+  }
 
   const [formData, setFormData] = useState({
     username: "",
@@ -15,12 +20,6 @@ const Login = ({ errors, history, login, security }) => {
     username,
     password
   } = formData
-
-  useEffect(() => {
-    if (security.validToken) {
-      history.push("/dashboard")
-    }
-  })
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })

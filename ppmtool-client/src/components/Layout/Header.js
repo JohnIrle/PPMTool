@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react'
+import { Link, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { logout } from "../../actions/securityActions"
 
-const Header = ({ security, logout }) => {
+const Header = ({ security, logout, history }) => {
 
   const { validToken, user } = security
 
@@ -88,4 +88,4 @@ const mapStateToProps = state => ({
   security: state.security
 })
 
-export default connect(mapStateToProps, { logout })(Header)
+export default connect(mapStateToProps, { logout })(withRouter(Header))

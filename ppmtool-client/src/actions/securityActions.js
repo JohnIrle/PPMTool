@@ -26,7 +26,7 @@ export const login = LoginRequest => async dispatch => {
     // post => Login Request
     const res = await axios.post("/api/users/login", LoginRequest)
     // Extract token from res.data
-    const { token } = res.datat
+    const { token } = res.data
     // Store the token in localStorage
     localStorage.setItem("jwtToken", token)
     // Set token in header

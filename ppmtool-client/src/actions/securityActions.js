@@ -1,5 +1,7 @@
 import axios from 'axios'
-import { GET_ERRORS } from './types'
+import { GET_ERRORS, SET_CURRENT_USER } from './types'
+import setJWTToken from '../util/setJWTToken'
+import jwt_decode from 'jwt-decode'
 
 export const createNewUser = (newUser, history) => async dispatch => {
   await axios.post("/api/users/register", newUser)
@@ -17,4 +19,29 @@ export const createNewUser = (newUser, history) => async dispatch => {
         payload: err.response.data
       })
     })
+}
+
+export const login = LoginRequest => async dispatch => {
+  try {
+    // post => Login Request
+    const res = await axios.post("/api/users/login", LoginRequest)
+    // Extract token from res.data
+    const { token } = res.datat
+    // Store the token in localStorage
+    localStorage.setItem("jwtToken", token)
+    // Set token in header
+    setJWTToken(token)
+    // decode token on React
+    const decoded = jwt_decode(token)
+    // dispatch to securityReducer
+    dispatch({
+      type: SET_CURRENT_USER,
+      payload: decoded
+    })
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+  }
 }

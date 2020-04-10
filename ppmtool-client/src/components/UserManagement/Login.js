@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 
-const Login = ({ }) => {
+const Login = ({ errors, history, login }) => {
   return (
     <div className="login">
       <div className="container">
